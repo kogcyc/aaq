@@ -4,8 +4,6 @@ import os
 app = flask.Flask(__name__)
 
 secret_string = os.getenv('SUPER_SECRET')
-print(secret_string)
-secret_string = 'SUPER_SECRET'
 
 @app.route('/')
 def index():
