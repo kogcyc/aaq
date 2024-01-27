@@ -3,11 +3,11 @@ import os
 
 app = flask.Flask(__name__)
 
-ss = os.getenv('SUPER_SECRET')
+secret_string = os.getenv('SUPER_SECRET')
 
 @app.route('/')
 def index():
-    return f'Hello World!, my secret is {ss}'
+    return f'<span style="font-size: 2em; font-weight: 900;">{secret_string}</span>'
 
 if __name__ == '__main__':
     app.run()
