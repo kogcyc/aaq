@@ -1,13 +1,29 @@
-import flask
+import base64
+from flask import Flask, request, jsonify, render_template
+from github import Github
+from github import Auth
 import os
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 
-secret_string = os.getenv('SUPER_SECRET')
+ss = os.getenv('SUPER_SECRET')
 
-@app.route('/')
+@app.route("/")
 def index():
-    return f'<br/><br/><br><span style="border-radius: 8px; padding: 40px; font-size: 2em; font-weight: 400; font-family: sans-serif; color: #fff; background-color: #79b;">{secret_string}</span>'
+    return render_template('index.html')
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    uploaded_file = request.files['file']
+    if uploaded_file:
+        file_content = uploaded_file.read()
+        auth = Auth.Token(ss)
+        g = Github(auth=auth)
+        repo_name = "kogcyc/imago"
+        file_name = uploaded_file.filename 
+        repo = g.get_repo(repo_name)
+        repo.create_file(file_name, "commit message", bytes(file_content)) 
+        return(file_name)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False)
